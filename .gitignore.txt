@@ -1,0 +1,6 @@
+build/
+*.pro.user
+*.o
+*.obj
+*.exe
+CMakeLists.txt.user
