@@ -1,0 +1,3 @@
+C:\Qt\Tools\CMake_64\bin\cmake.exe -E rm -f CMakeFiles\DeadlineSaver.dir/objects.a
+C:\Qt\Tools\mingw1310_64\bin\ar.exe qc CMakeFiles\DeadlineSaver.dir/objects.a @CMakeFiles\DeadlineSaver.dir\objects1.rsp
+C:\Qt\Tools\mingw1310_64\bin\g++.exe -g -mwindows -Wl,--whole-archive CMakeFiles\DeadlineSaver.dir/objects.a -Wl,--no-whole-archive -o DeadlineSaver.exe -Wl,--out-implib,libDeadlineSaver.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\DeadlineSaver.dir\linkLibs.rsp
