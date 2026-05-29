@@ -380,6 +380,6 @@ C:/Users/Windows/OneDrive/Documents/ReminderApp/mainwindow.h
  mdp:C:/Qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/wchar.h
  mdp:C:/Users/Windows/OneDrive/Documents/ReminderApp/build/Desktop_Qt_6_11_0_MinGW_64_bit-Debug/ReminderApp_autogen/moc_predefs.h
  mdp:C:/Users/Windows/OneDrive/Documents/ReminderApp/mainwindow.h
-C:/Users/Windows/OneDrive/Documents/ReminderApp/main.cpp
 C:/Users/Windows/OneDrive/Documents/ReminderApp/mainwindow.cpp
  uic:./ui_mainwindow.h
+C:/Users/Windows/OneDrive/Documents/ReminderApp/main.cpp
