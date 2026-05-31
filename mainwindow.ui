@@ -141,9 +141,9 @@ QScrollBar::handle:vertical {
     <property name="geometry">
      <rect>
       <x>250</x>
-      <y>40</y>
+      <y>39</y>
       <width>256</width>
-      <height>20</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -160,7 +160,7 @@ QScrollBar::handle:vertical {
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>25</height>
+     <height>17</height>
     </rect>
    </property>
   </widget>

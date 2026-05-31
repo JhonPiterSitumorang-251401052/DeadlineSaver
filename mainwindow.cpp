@@ -201,6 +201,14 @@ MainWindow::MainWindow(QWidget *parent)
             font-weight: bold;
         }
 
+        #btnHapus {
+            background-color: #ff4757; /* Warna merah yang cerah dan modern */
+        }
+
+        #btnHapus:hover {
+            background-color: #ff6b81;
+        }
+
         QPushButton:hover {
             background-color: #539dff;
         }
