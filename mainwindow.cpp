@@ -182,53 +182,33 @@ MainWindow::MainWindow(QWidget *parent)
             min-height: 40px;
         }
 
-        QLineEdit {
-            background-color: #2d2d2d;
+
+        QLineEdit, QDateTimeEdit {
+            background-color: rgba(255, 255, 255, 10%); /* Transparan */
             color: white;
-            border: 2px solid #444;
-            border-radius: 10px;
+            border: 1px solid #555;
+            border-radius: 8px;
             padding: 8px;
-            font-size: 14px;
         }
 
-        QDateTimeEdit {
-            background-color: #2d2d2d;
-            color: white;
-            border: 2px solid #444;
-            border-radius: 10px;
-            padding: 8px;
-            font-size: 14px;
-        }
-
+        /* Tombol dengan warna yang lebih pop-up */
         QPushButton {
-            background-color: #3a86ff;
+            background-color: #3498db;
             color: white;
-            border-radius: 10px;
-            padding: 10px;
-            font-size: 14px;
+            border-radius: 8px;
             font-weight: bold;
         }
 
-        #btnHapus {
-            background-color: #ff4757; /* Warna merah yang cerah dan modern */
-        }
-
-        #btnHapus:hover {
-            background-color: #ff6b81;
-        }
-
         QPushButton:hover {
-            background-color: #539dff;
+            background-color: #2980b9;
         }
 
+        /* List Widget agar menyatu dengan background */
         QListWidget {
-            background-color: #2d2d2d;
-            color: white;
-            border-radius: 10px;
-            padding: 5px;
-            font-size: 14px;
+            background-color: rgba(0, 0, 0, 20%);
+            border: none;
+            color: #ecf0f1;
         }
-
     )");
 }
 
