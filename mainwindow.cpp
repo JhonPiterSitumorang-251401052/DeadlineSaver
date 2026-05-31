@@ -11,6 +11,29 @@
 #include <QSoundEffect>
 #include <QDebug>
 #include <QLabel>
+#include <QStyledItemDelegate>
+#include <QPainter>
+
+// Delegate untuk memberi padding pada setiap item di listReminder
+class PaddedItemDelegate : public QStyledItemDelegate {
+public:
+    explicit PaddedItemDelegate(QObject *parent = nullptr)
+        : QStyledItemDelegate(parent) {}
+
+    void paint(QPainter *painter, const QStyleOptionViewItem &option,
+               const QModelIndex &index) const override {
+        QStyleOptionViewItem opt = option;
+        opt.rect.adjust(10, 6, -10, -6);
+        QStyledItemDelegate::paint(painter, opt, index);
+    }
+
+    QSize sizeHint(const QStyleOptionViewItem &option,
+                   const QModelIndex &index) const override {
+        QSize size = QStyledItemDelegate::sizeHint(option, index);
+        size.setHeight(size.height() + 16);
+        return size;
+    }
+};
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -18,8 +41,10 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    // Override styling labelPetunjuk agar tidak ikut style judul (20px bold)
-    // Label judul "label" sudah di-center via properti alignment di file .ui
+    // Padding untuk item di listReminder
+    ui->listReminder->setItemDelegate(new PaddedItemDelegate(this));
+
+    // Override style labelPetunjuk agar tidak ikut QLabel global (20px bold)
     ui->labelPetunjuk->setStyleSheet(
         "color: #cccccc;"
         "font-size: 13px;"
@@ -41,7 +66,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     sound->setSource(
         QUrl::fromLocalFile(
-            "alarm.wav"
+            QCoreApplication::applicationDirPath() + "/alarm.wav"
             )
         );
 
@@ -136,6 +161,7 @@ MainWindow::MainWindow(QWidget *parent)
             }
         }
     });
+
     this->setStyleSheet(R"(
 
         QMainWindow {
@@ -194,8 +220,8 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
 void MainWindow::on_btnTambah_clicked()
 {
 
 }
-
