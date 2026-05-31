@@ -71,23 +71,21 @@
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="layoutTombolBawah">
-      <property name="spacing"><number>8</number></property>
-      <item>
-       <widget class="QPushButton" name="btnEdit">
-        <property name="text">
-         <string>Edit Reminder</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="btnHapus">
-        <property name="text">
-         <string>Hapus Reminder</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
+     <widget class="QPushButton" name="btnEdit">
+      <property name="text">
+       <string>Edit Reminder</string>
+      </property>
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="btnHapus">
+      <property name="text">
+       <string>Hapus Reminder</string>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>

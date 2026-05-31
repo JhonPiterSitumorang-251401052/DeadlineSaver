@@ -53,12 +53,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->labelPetunjuk->setStyleSheet(styleLabel);
     ui->labelWaktu->setStyleSheet(styleLabel);
 
-    // Judul jendela
-    this->setWindowTitle("DeadlineSaver");
-
-    // Fitur 1: Placeholder text pada InputReminder
-    ui->InputReminder->setPlaceholderText("Contoh: Tugas Besar Alpro...");
-
     QTimer *timer = new QTimer(this);
 
     timer->start(1000);
@@ -103,11 +97,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->btnTambah, &QPushButton::clicked, this, [=]() {
 
-        QString reminder = ui->InputReminder->text();
+        QString reminder = ui->InputReminder->text().trimmed();
 
         if (reminder.isEmpty()) {
             QMessageBox::warning(this, "Peringatan", "Nama reminder tidak boleh kosong!");
-            return; // Menghentikan fungsi agar tidak lanjut ke bawah
+            return;
         }
 
         QString waktu =
@@ -115,75 +109,80 @@ MainWindow::MainWindow(QWidget *parent)
                 .toString("yyyy-MM-dd hh:mm:ss");
 
         QString dataMentah = reminder + "|" + waktu;
-
         QString teksTampil = reminder + " (" + waktu + ")";
 
-        QListWidgetItem *item = new QListWidgetItem(teksTampil);
-        item->setData(Qt::UserRole, dataMentah);
+        if (editIndex >= 0) {
+            // Mode edit: perbarui item yang sudah ada
+            QListWidgetItem *item = ui->listReminder->item(editIndex);
+            item->setText(teksTampil);
+            item->setData(Qt::UserRole, dataMentah);
+            item->setForeground(Qt::white);
 
-        ui->listReminder->addItem(item);
-        sortReminders();
-
-        QFile file("reminder.txt");
-        if(file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-            QTextStream out(&file);
-            for(int i = 0; i < ui->listReminder->count(); ++i) {
-                out << ui->listReminder->item(i)->data(Qt::UserRole).toString() << "\n";
-            }
-            file.close();
+            editIndex = -1;
+            ui->btnTambah->setText("Tambah Reminder");
+            ui->btnEdit->setEnabled(false);
+        } else {
+            // Mode tambah: buat item baru
+            QListWidgetItem *item = new QListWidgetItem(teksTampil);
+            item->setData(Qt::UserRole, dataMentah);
+            ui->listReminder->addItem(item);
         }
 
+        sortReminders();
+        saveToFile();
         ui->InputReminder->clear();
+    });
+
+    connect(ui->btnEdit, &QPushButton::clicked, this, [=]() {
+
+        int baris = ui->listReminder->currentRow();
+        if (baris < 0) {
+            QMessageBox::warning(this, "Peringatan", "Pilih reminder yang ingin diedit!");
+            return;
+        }
+
+        QListWidgetItem *item = ui->listReminder->item(baris);
+        QString dataMentah = item->data(Qt::UserRole).toString();
+        QStringList bagian = dataMentah.split("|");
+
+        if (bagian.size() < 2) return;
+
+        // Isi form dengan data reminder yang dipilih
+        ui->InputReminder->setText(bagian[0]);
+        ui->dateTimeEdit->setDateTime(
+            QDateTime::fromString(bagian[1], "yyyy-MM-dd hh:mm:ss")
+        );
+
+        // Tandai item yang sedang diedit dengan warna oranye
+        item->setForeground(QColor("#f39c12"));
+
+        editIndex = baris;
+        ui->btnTambah->setText("Simpan Perubahan");
+        ui->btnEdit->setEnabled(false);
+
+        ui->InputReminder->setFocus();
     });
 
     connect(ui->btnHapus, &QPushButton::clicked, this, [=]() {
 
         int baris = ui->listReminder->currentRow();
+        if (baris < 0) return;
+
+        // Batalkan mode edit jika item yang dihapus adalah yang sedang diedit
+        if (baris == editIndex) {
+            editIndex = -1;
+            ui->btnTambah->setText("Tambah Reminder");
+            ui->btnEdit->setEnabled(true);
+            ui->InputReminder->clear();
+        }
 
         delete ui->listReminder->takeItem(baris);
+        saveToFile();
     });
 
-    // Fitur 2: Tombol Edit — kembalikan data ke input lalu hapus item lama
-    connect(ui->btnEdit, &QPushButton::clicked, this, [=]() {
-
-        int baris = ui->listReminder->currentRow();
-
-        if (baris < 0) {
-            QMessageBox::warning(this, "Peringatan", "Pilih reminder yang ingin diedit terlebih dahulu!");
-            return;
-        }
-
-        QListWidgetItem *item = ui->listReminder->item(baris);
-
-        // Ambil data mentah (format: "nama|yyyy-MM-dd hh:mm:ss")
-        QString dataMentah = item->data(Qt::UserRole).toString();
-
-        // Fallback: kalau UserRole kosong, parse dari text langsung
-        if (dataMentah.isEmpty()) {
-            dataMentah = item->text();
-        }
-
-        QStringList bagian = dataMentah.split("|");
-
-        if (bagian.size() >= 2) {
-            ui->InputReminder->setText(bagian[0].trimmed());
-            QDateTime dt = QDateTime::fromString(bagian[1].trimmed(), "yyyy-MM-dd hh:mm:ss");
-            if (dt.isValid()) {
-                ui->dateTimeEdit->setDateTime(dt);
-            }
-        }
-
-        // Hapus item lama dari list dan file
-        delete ui->listReminder->takeItem(baris);
-
-        QFile file("reminder.txt");
-        if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-            QTextStream out(&file);
-            for (int i = 0; i < ui->listReminder->count(); ++i) {
-                out << ui->listReminder->item(i)->data(Qt::UserRole).toString() << "\n";
-            }
-            file.close();
-        }
+    // Aktifkan btnEdit saat user memilih item dari list
+    connect(ui->listReminder, &QListWidget::currentRowChanged, this, [=](int row) {
+        ui->btnEdit->setEnabled(row >= 0 && editIndex < 0);
     });
 
     connect(timer, &QTimer::timeout, this, [=]() {
@@ -192,36 +191,12 @@ MainWindow::MainWindow(QWidget *parent)
             QDateTime::currentDateTime()
                 .toString("yyyy-MM-dd hh:mm:ss");
 
-        QDateTime waktuSekarang = QDateTime::currentDateTime();
-
         for(int i = 0; i < ui->listReminder->count(); i++) {
 
-            QListWidgetItem *currentItem = ui->listReminder->item(i);
+            QString dataMentah =
+                ui->listReminder->item(i)->data(Qt::UserRole).toString();
 
-            QString itemText = currentItem->text();
-
-            QStringList bagian = itemText.split("|");
-
-            // Fitur 3: Indikator warna overdue
-            // Ambil waktu dari UserRole (data mentah) atau teks langsung
-            QString dataMentah = currentItem->data(Qt::UserRole).toString();
-            if (dataMentah.isEmpty()) dataMentah = itemText;
-
-            QStringList bagianData = dataMentah.split("|");
-            if (bagianData.size() >= 2) {
-                QDateTime deadlineItem = QDateTime::fromString(
-                    bagianData[1].trimmed(), "yyyy-MM-dd hh:mm:ss");
-
-                if (deadlineItem.isValid() && deadlineItem < waktuSekarang) {
-                    // Sudah overdue — warna merah redup
-                    currentItem->setBackground(QColor(120, 30, 30));
-                    currentItem->setForeground(QColor(255, 180, 180));
-                } else {
-                    // Belum overdue — kembalikan ke default
-                    currentItem->setBackground(Qt::transparent);
-                    currentItem->setForeground(QColor(0xec, 0xf0, 0xf1));
-                }
-            }
+            QStringList bagian = dataMentah.split("|");
 
             if(bagian.size() < 2)
                 continue;
@@ -240,8 +215,15 @@ MainWindow::MainWindow(QWidget *parent)
                     5000
                     );
 
-                delete ui->listReminder->takeItem(i);
+                // Reset mode edit jika item yang berbunyi sedang diedit
+                if (i == editIndex) {
+                    editIndex = -1;
+                    ui->btnTambah->setText("Tambah Reminder");
+                    ui->InputReminder->clear();
+                }
 
+                delete ui->listReminder->takeItem(i);
+                saveToFile();
                 i--;
             }
         }
@@ -286,6 +268,19 @@ MainWindow::MainWindow(QWidget *parent)
             background-color: #2980b9;
         }
 
+        #btnEdit {
+            background-color: #27ae60;
+        }
+
+        #btnEdit:hover {
+            background-color: #1e8449;
+        }
+
+        #btnEdit:disabled {
+            background-color: #555;
+            color: #999;
+        }
+
         /* List Widget agar menyatu dengan background */
         QListWidget {
             background-color: rgba(0, 0, 0, 20%);
@@ -298,6 +293,17 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::saveToFile() {
+    QFile file("reminder.txt");
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream out(&file);
+        for (int i = 0; i < ui->listReminder->count(); ++i) {
+            out << ui->listReminder->item(i)->data(Qt::UserRole).toString() << "\n";
+        }
+        file.close();
+    }
 }
 
 void MainWindow::sortReminders() {

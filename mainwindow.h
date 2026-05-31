@@ -26,5 +26,8 @@ private:
     Ui::MainWindow *ui;
 
     QSystemTrayIcon *trayIcon;
+    int editIndex = -1; // -1 = mode tambah, >= 0 = mode edit
+
+    void saveToFile();
 };
 #endif // MAINWINDOW_H
