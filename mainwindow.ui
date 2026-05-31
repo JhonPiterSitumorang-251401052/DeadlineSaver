@@ -15,15 +15,25 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="outerLayout">
-    <property name="leftMargin"><number>200</number></property>
-    <property name="rightMargin"><number>200</number></property>
-    <property name="topMargin"><number>40</number></property>
-    <property name="bottomMargin"><number>40</number></property>
-    <property name="spacing"><number>12</number></property>
+    <property name="spacing">
+     <number>12</number>
+    </property>
+    <property name="leftMargin">
+     <number>200</number>
+    </property>
+    <property name="topMargin">
+     <number>40</number>
+    </property>
+    <property name="rightMargin">
+     <number>200</number>
+    </property>
+    <property name="bottomMargin">
+     <number>40</number>
+    </property>
     <item>
      <widget class="QLabel" name="label">
       <property name="text">
-       <string>Reminder App</string>
+       <string>Deadline Saver</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignmentFlag::AlignHCenter</set>
