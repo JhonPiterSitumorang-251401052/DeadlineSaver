@@ -29,6 +29,16 @@
        <property name="text">
         <string>Reminder App</string>
        </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignHCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="labelPetunjuk">
+       <property name="text">
+        <string>Masukkan jadwal di bawah ini:</string>
+       </property>
       </widget>
      </item>
      <item>

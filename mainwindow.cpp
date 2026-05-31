@@ -10,12 +10,21 @@
 #include <QApplication>
 #include <QSoundEffect>
 #include <QDebug>
+#include <QLabel>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    // Override styling labelPetunjuk agar tidak ikut style judul (20px bold)
+    // Label judul "label" sudah di-center via properti alignment di file .ui
+    ui->labelPetunjuk->setStyleSheet(
+        "color: #cccccc;"
+        "font-size: 13px;"
+        "font-weight: normal;"
+    );
 
     QTimer *timer = new QTimer(this);
 
@@ -185,3 +194,8 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+void MainWindow::on_btnTambah_clicked()
+{
+
+}
+

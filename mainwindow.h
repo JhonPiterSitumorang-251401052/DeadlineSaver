@@ -18,6 +18,9 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;
 
+private slots:
+    void on_btnTambah_clicked();
+
 private:
     Ui::MainWindow *ui;
 
