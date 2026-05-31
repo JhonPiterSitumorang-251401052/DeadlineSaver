@@ -180,9 +180,50 @@ MainWindow::MainWindow(QWidget *parent)
         saveToFile();
     });
 
-    // Aktifkan btnEdit saat user memilih item dari list
+    connect(ui->btnSelesai, &QPushButton::clicked, this, [=]() {
+
+        int baris = ui->listReminder->currentRow();
+        if (baris < 0) {
+            QMessageBox::warning(this, "Peringatan", "Pilih reminder yang ingin ditandai selesai!");
+            return;
+        }
+
+        QListWidgetItem *item = ui->listReminder->item(baris);
+
+        // Toggle: kalau sudah selesai, batalkan; kalau belum, tandai
+        bool sudahSelesai = item->data(Qt::UserRole + 1).toBool();
+
+        if (sudahSelesai) {
+            // Batalkan tanda selesai
+            item->setData(Qt::UserRole + 1, false);
+            item->setForeground(QColor("#ecf0f1"));
+            QFont font = item->font();
+            font.setStrikeOut(false);
+            item->setFont(font);
+            ui->btnSelesai->setText("Tandai Selesai ✔");
+        } else {
+            // Tandai selesai
+            item->setData(Qt::UserRole + 1, true);
+            item->setForeground(QColor("#2ecc71"));
+            QFont font = item->font();
+            font.setStrikeOut(true);
+            item->setFont(font);
+            ui->btnSelesai->setText("Batalkan ✖");
+        }
+    });
+
+    // Aktifkan btnEdit dan btnSelesai saat user memilih item dari list
     connect(ui->listReminder, &QListWidget::currentRowChanged, this, [=](int row) {
         ui->btnEdit->setEnabled(row >= 0 && editIndex < 0);
+        ui->btnSelesai->setEnabled(row >= 0);
+
+        // Update teks tombol sesuai status item yang dipilih
+        if (row >= 0) {
+            bool sudahSelesai = ui->listReminder->item(row)->data(Qt::UserRole + 1).toBool();
+            ui->btnSelesai->setText(sudahSelesai ? "Batalkan ✖" : "Tandai Selesai ✔");
+        } else {
+            ui->btnSelesai->setText("Tandai Selesai ✔");
+        }
     });
 
     connect(timer, &QTimer::timeout, this, [=]() {
@@ -257,7 +298,9 @@ MainWindow::MainWindow(QWidget *parent)
                     ui->listReminder->item(i)->setForeground(QColor("#ecf0f1"));
             }
 
-            if (i != editIndex) {
+            // Jangan update countdown untuk item yang sedang diedit atau sudah selesai
+            bool sudahSelesai = ui->listReminder->item(i)->data(Qt::UserRole + 1).toBool();
+            if (i != editIndex && !sudahSelesai) {
                 ui->listReminder->item(i)->setText(pesan + " — " + countdown);
             }
         }
@@ -311,6 +354,19 @@ MainWindow::MainWindow(QWidget *parent)
         }
 
         #btnEdit:disabled {
+            background-color: #555;
+            color: #999;
+        }
+
+        #btnSelesai {
+            background-color: #16a085;
+        }
+
+        #btnSelesai:hover {
+            background-color: #1abc9c;
+        }
+
+        #btnSelesai:disabled {
             background-color: #555;
             color: #999;
         }

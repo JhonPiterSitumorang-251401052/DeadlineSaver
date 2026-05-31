@@ -81,6 +81,16 @@
      </widget>
     </item>
     <item>
+     <widget class="QPushButton" name="btnSelesai">
+      <property name="text">
+       <string>Tandai Selesai ✔</string>
+      </property>
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QPushButton" name="btnHapus">
       <property name="text">
        <string>Hapus Reminder</string>
