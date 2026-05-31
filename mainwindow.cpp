@@ -97,6 +97,11 @@ MainWindow::MainWindow(QWidget *parent)
 
         QString reminder = ui->InputReminder->text();
 
+        if (reminder.isEmpty()) {
+            QMessageBox::warning(this, "Peringatan", "Nama reminder tidak boleh kosong!");
+            return; // Menghentikan fungsi agar tidak lanjut ke bawah
+        }
+
         QString waktu =
             ui->dateTimeEdit->dateTime()
                 .toString("yyyy-MM-dd hh:mm:ss");
