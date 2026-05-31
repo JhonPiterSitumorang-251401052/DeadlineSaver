@@ -15,25 +15,15 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="outerLayout">
-    <property name="spacing">
-     <number>12</number>
-    </property>
-    <property name="leftMargin">
-     <number>200</number>
-    </property>
-    <property name="topMargin">
-     <number>40</number>
-    </property>
-    <property name="rightMargin">
-     <number>200</number>
-    </property>
-    <property name="bottomMargin">
-     <number>40</number>
-    </property>
+    <property name="leftMargin"><number>200</number></property>
+    <property name="rightMargin"><number>200</number></property>
+    <property name="topMargin"><number>40</number></property>
+    <property name="bottomMargin"><number>40</number></property>
+    <property name="spacing"><number>12</number></property>
     <item>
      <widget class="QLabel" name="label">
       <property name="text">
-       <string>Deadline Saver</string>
+       <string>Reminder App</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignmentFlag::AlignHCenter</set>
@@ -81,11 +71,23 @@
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="btnHapus">
-      <property name="text">
-       <string>Hapus Reminder</string>
-      </property>
-     </widget>
+     <layout class="QHBoxLayout" name="layoutTombolBawah">
+      <property name="spacing"><number>8</number></property>
+      <item>
+       <widget class="QPushButton" name="btnEdit">
+        <property name="text">
+         <string>Edit Reminder</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnHapus">
+        <property name="text">
+         <string>Hapus Reminder</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>

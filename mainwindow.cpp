@@ -53,6 +53,12 @@ MainWindow::MainWindow(QWidget *parent)
     ui->labelPetunjuk->setStyleSheet(styleLabel);
     ui->labelWaktu->setStyleSheet(styleLabel);
 
+    // Judul jendela
+    this->setWindowTitle("DeadlineSaver");
+
+    // Fitur 1: Placeholder text pada InputReminder
+    ui->InputReminder->setPlaceholderText("Contoh: Tugas Besar Alpro...");
+
     QTimer *timer = new QTimer(this);
 
     timer->start(1000);
@@ -137,18 +143,85 @@ MainWindow::MainWindow(QWidget *parent)
         delete ui->listReminder->takeItem(baris);
     });
 
+    // Fitur 2: Tombol Edit — kembalikan data ke input lalu hapus item lama
+    connect(ui->btnEdit, &QPushButton::clicked, this, [=]() {
+
+        int baris = ui->listReminder->currentRow();
+
+        if (baris < 0) {
+            QMessageBox::warning(this, "Peringatan", "Pilih reminder yang ingin diedit terlebih dahulu!");
+            return;
+        }
+
+        QListWidgetItem *item = ui->listReminder->item(baris);
+
+        // Ambil data mentah (format: "nama|yyyy-MM-dd hh:mm:ss")
+        QString dataMentah = item->data(Qt::UserRole).toString();
+
+        // Fallback: kalau UserRole kosong, parse dari text langsung
+        if (dataMentah.isEmpty()) {
+            dataMentah = item->text();
+        }
+
+        QStringList bagian = dataMentah.split("|");
+
+        if (bagian.size() >= 2) {
+            ui->InputReminder->setText(bagian[0].trimmed());
+            QDateTime dt = QDateTime::fromString(bagian[1].trimmed(), "yyyy-MM-dd hh:mm:ss");
+            if (dt.isValid()) {
+                ui->dateTimeEdit->setDateTime(dt);
+            }
+        }
+
+        // Hapus item lama dari list dan file
+        delete ui->listReminder->takeItem(baris);
+
+        QFile file("reminder.txt");
+        if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            QTextStream out(&file);
+            for (int i = 0; i < ui->listReminder->count(); ++i) {
+                out << ui->listReminder->item(i)->data(Qt::UserRole).toString() << "\n";
+            }
+            file.close();
+        }
+    });
+
     connect(timer, &QTimer::timeout, this, [=]() {
 
         QString sekarang =
             QDateTime::currentDateTime()
                 .toString("yyyy-MM-dd hh:mm:ss");
 
+        QDateTime waktuSekarang = QDateTime::currentDateTime();
+
         for(int i = 0; i < ui->listReminder->count(); i++) {
 
-            QString itemText =
-                ui->listReminder->item(i)->text();
+            QListWidgetItem *currentItem = ui->listReminder->item(i);
+
+            QString itemText = currentItem->text();
 
             QStringList bagian = itemText.split("|");
+
+            // Fitur 3: Indikator warna overdue
+            // Ambil waktu dari UserRole (data mentah) atau teks langsung
+            QString dataMentah = currentItem->data(Qt::UserRole).toString();
+            if (dataMentah.isEmpty()) dataMentah = itemText;
+
+            QStringList bagianData = dataMentah.split("|");
+            if (bagianData.size() >= 2) {
+                QDateTime deadlineItem = QDateTime::fromString(
+                    bagianData[1].trimmed(), "yyyy-MM-dd hh:mm:ss");
+
+                if (deadlineItem.isValid() && deadlineItem < waktuSekarang) {
+                    // Sudah overdue — warna merah redup
+                    currentItem->setBackground(QColor(120, 30, 30));
+                    currentItem->setForeground(QColor(255, 180, 180));
+                } else {
+                    // Belum overdue — kembalikan ke default
+                    currentItem->setBackground(Qt::transparent);
+                    currentItem->setForeground(QColor(0xec, 0xf0, 0xf1));
+                }
+            }
 
             if(bagian.size() < 2)
                 continue;
