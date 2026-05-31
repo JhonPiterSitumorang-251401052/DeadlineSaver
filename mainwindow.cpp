@@ -174,6 +174,11 @@ MainWindow::MainWindow(QWidget *parent)
             font-weight: bold;
         }
 
+        #label {
+            padding-bottom: 10px;
+            min-height: 40px;
+        }
+
         QLineEdit {
             background-color: #2d2d2d;
             color: white;
