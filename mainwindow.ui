@@ -13,27 +13,88 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QMainWindow {
+    background-color: #F5F7FA;
+}
+
+QLabel#lblTitle {
+    color: #1E293B;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+QLabel#lblSubtitle {
+    color: #64748B;
+    font-size: 13px;
+}
+
+QLineEdit {
+    background: white;
+    border: 2px solid #E2E8F0;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 14px;
+}
+
+QLineEdit:focus {
+    border: 2px solid #3B82F6;
+}
+
+QDateTimeEdit {
+    background: white;
+    border: 2px solid #E2E8F0;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 14px;
+}
+
+QPushButton {
+    background-color: #3B82F6;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background-color: #2563EB;
+}
+
+QPushButton:pressed {
+    background-color: #1D4ED8;
+}
+
+QListWidget {
+    background: white;
+    border: 2px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 8px;
+    font-size: 14px;
+}
+
+QScrollBar:vertical {
+    width: 8px;
+    border: none;
+}
+
+QScrollBar::handle:vertical {
+    background: #CBD5E1;
+    border-radius: 4px;
+}</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>10</y>
+      <x>250</x>
+      <y>90</y>
       <width>258</width>
       <height>328</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Reminder App</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignHCenter</set>
-       </property>
-      </widget>
-     </item>
      <item>
       <widget class="QLabel" name="labelPetunjuk">
        <property name="text">
@@ -75,6 +136,22 @@
       </widget>
      </item>
     </layout>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>40</y>
+      <width>256</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Reminder App</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignmentFlag::AlignHCenter</set>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
