@@ -167,7 +167,8 @@ MainWindow::MainWindow(QWidget *parent)
     this->setStyleSheet(R"(
 
         QMainWindow {
-            background-color: #1e1e1e;
+            background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,
+                                        stop:0 #2c3e50, stop:1 #000000);
         }
 
         QLabel {
