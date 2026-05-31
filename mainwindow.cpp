@@ -101,19 +101,22 @@ MainWindow::MainWindow(QWidget *parent)
             ui->dateTimeEdit->dateTime()
                 .toString("yyyy-MM-dd hh:mm:ss");
 
-        QString hasil = reminder + "|" + waktu;
+        QString dataMentah = reminder + "|" + waktu;
 
-        ui->listReminder->addItem(hasil);
+        QString teksTampil = reminder + " (" + waktu + ")";
+
+        QListWidgetItem *item = new QListWidgetItem(teksTampil);
+        item->setData(Qt::UserRole, dataMentah);
+
+        ui->listReminder->addItem(item);
         sortReminders();
 
         QFile file("reminder.txt");
-
-        if(file.open(QIODevice::Append | QIODevice::Text)) {
-
+        if(file.open(QIODevice::WriteOnly | QIODevice::Text)) {
             QTextStream out(&file);
-
-            out << hasil << "\n";
-
+            for(int i = 0; i < ui->listReminder->count(); ++i) {
+                out << ui->listReminder->item(i)->data(Qt::UserRole).toString() << "\n";
+            }
             file.close();
         }
 
