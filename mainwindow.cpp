@@ -187,9 +187,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(timer, &QTimer::timeout, this, [=]() {
 
-        QString sekarang =
-            QDateTime::currentDateTime()
-                .toString("yyyy-MM-dd hh:mm:ss");
+        QDateTime sekarang = QDateTime::currentDateTime();
+        QString sekarangStr = sekarang.toString("yyyy-MM-dd hh:mm:ss");
 
         for(int i = 0; i < ui->listReminder->count(); i++) {
 
@@ -204,7 +203,7 @@ MainWindow::MainWindow(QWidget *parent)
             QString pesan = bagian[0];
             QString waktu = bagian[1];
 
-            if(sekarang == waktu) {
+            if(sekarangStr == waktu) {
 
                 sound->play();
 
@@ -215,7 +214,6 @@ MainWindow::MainWindow(QWidget *parent)
                     5000
                     );
 
-                // Reset mode edit jika item yang berbunyi sedang diedit
                 if (i == editIndex) {
                     editIndex = -1;
                     ui->btnTambah->setText("Tambah Reminder");
@@ -225,6 +223,42 @@ MainWindow::MainWindow(QWidget *parent)
                 delete ui->listReminder->takeItem(i);
                 saveToFile();
                 i--;
+                continue;
+            }
+
+            // Update teks countdown
+            QDateTime targetWaktu = QDateTime::fromString(waktu, "yyyy-MM-dd hh:mm:ss");
+            qint64 selisihDetik = sekarang.secsTo(targetWaktu);
+
+            QString countdown;
+            if (selisihDetik <= 0) {
+                countdown = "Sudah lewat!";
+                ui->listReminder->item(i)->setForeground(QColor("#e74c3c"));
+            } else {
+                qint64 hari  = selisihDetik / 86400;
+                qint64 jam   = (selisihDetik % 86400) / 3600;
+                qint64 menit = (selisihDetik % 3600) / 60;
+                qint64 detik = selisihDetik % 60;
+
+                if (hari > 0)
+                    countdown = QString("%1 hari %2 jam lagi").arg(hari).arg(jam);
+                else if (jam > 0)
+                    countdown = QString("%1 jam %2 menit lagi").arg(jam).arg(menit);
+                else if (menit > 0)
+                    countdown = QString("%1 menit %2 detik lagi").arg(menit).arg(detik);
+                else
+                    countdown = QString("%1 detik lagi").arg(detik);
+
+                if (selisihDetik <= 60)
+                    ui->listReminder->item(i)->setForeground(QColor("#e74c3c"));
+                else if (selisihDetik <= 3600)
+                    ui->listReminder->item(i)->setForeground(QColor("#f39c12"));
+                else
+                    ui->listReminder->item(i)->setForeground(QColor("#ecf0f1"));
+            }
+
+            if (i != editIndex) {
+                ui->listReminder->item(i)->setText(pesan + " — " + countdown);
             }
         }
     });
