@@ -44,12 +44,14 @@ MainWindow::MainWindow(QWidget *parent)
     // Padding untuk item di listReminder
     ui->listReminder->setItemDelegate(new PaddedItemDelegate(this));
 
-    // Override style labelPetunjuk agar tidak ikut QLabel global (20px bold)
-    ui->labelPetunjuk->setStyleSheet(
+    // Override style label petunjuk agar tidak ikut QLabel global (20px bold)
+    QString styleLabel =
         "color: #cccccc;"
         "font-size: 13px;"
-        "font-weight: normal;"
-    );
+        "font-weight: normal;";
+
+    ui->labelPetunjuk->setStyleSheet(styleLabel);
+    ui->labelWaktu->setStyleSheet(styleLabel);
 
     QTimer *timer = new QTimer(this);
 

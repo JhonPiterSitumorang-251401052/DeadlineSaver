@@ -45,6 +45,13 @@
      </widget>
     </item>
     <item>
+     <widget class="QLabel" name="labelWaktu">
+      <property name="text">
+       <string>Setel waktu pengingat:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QDateTimeEdit" name="dateTimeEdit"/>
     </item>
     <item>
