@@ -90,6 +90,7 @@ MainWindow::MainWindow(QWidget *parent)
         }
 
         file.close();
+        sortReminders();
     }
 
     connect(ui->btnTambah, &QPushButton::clicked, this, [=]() {
@@ -103,6 +104,7 @@ MainWindow::MainWindow(QWidget *parent)
         QString hasil = reminder + "|" + waktu;
 
         ui->listReminder->addItem(hasil);
+        sortReminders();
 
         QFile file("reminder.txt");
 
@@ -232,6 +234,23 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::sortReminders() {
+    QList<QListWidgetItem*> items;
+    for(int i = 0; i < ui->listReminder->count(); ++i) {
+        items.append(ui->listReminder->takeItem(0));
+    }
+
+    std::sort(items.begin(), items.end(), [](QListWidgetItem* a, QListWidgetItem* b) {
+        QString waktuA = a->text().split("|").last();
+        QString waktuB = b->text().split("|").last();
+        return waktuA < waktuB;
+    });
+
+    for(auto item : items) {
+        ui->listReminder->addItem(item);
+    }
 }
 
 void MainWindow::on_btnTambah_clicked()
