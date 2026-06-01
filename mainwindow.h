@@ -29,5 +29,6 @@ private:
     int editIndex = -1; // -1 = mode tambah, >= 0 = mode edit
 
     void saveToFile();
+    void updateStatistik();
 };
 #endif // MAINWINDOW_H

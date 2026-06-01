@@ -113,6 +113,7 @@ MainWindow::MainWindow(QWidget *parent)
 
         file.close();
         sortReminders();
+        updateStatistik();
     }
 
     connect(ui->btnTambah, &QPushButton::clicked, this, [=]() {
@@ -249,6 +250,7 @@ MainWindow::MainWindow(QWidget *parent)
             item->setFont(font);
             ui->btnSelesai->setText("Batalkan ✖");
         }
+        updateStatistik();
     });
 
     // Aktifkan btnEdit dan btnSelesai saat user memilih item dari list
@@ -302,6 +304,7 @@ MainWindow::MainWindow(QWidget *parent)
 
                 delete ui->listReminder->takeItem(i);
                 saveToFile();
+                updateStatistik();
                 i--;
                 continue;
             }
@@ -448,6 +451,36 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::updateStatistik() {
+    int aktif = 0, selesai = 0, terlewat = 0;
+    QDateTime sekarang = QDateTime::currentDateTime();
+
+    for (int i = 0; i < ui->listReminder->count(); i++) {
+        QListWidgetItem *item = ui->listReminder->item(i);
+        bool sudahSelesai = item->data(Qt::UserRole + 1).toBool();
+
+        if (sudahSelesai) {
+            selesai++;
+        } else {
+            QString dataMentah = item->data(Qt::UserRole).toString();
+            QStringList bagian = dataMentah.split("|");
+            if (bagian.size() >= 2) {
+                QDateTime waktu = QDateTime::fromString(bagian[1], "yyyy-MM-dd hh:mm:ss");
+                if (waktu < sekarang)
+                    terlewat++;
+                else
+                    aktif++;
+            }
+        }
+    }
+
+    ui->labelStatistik->setText(
+        "📊 Aktif: " + QString::number(aktif) +
+        "   ✅ Selesai: " + QString::number(selesai) +
+        "   ⚠ Terlewat: " + QString::number(terlewat)
+    );
+}
+
 void MainWindow::saveToFile() {
     QFile file("reminder.txt");
     if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -457,6 +490,7 @@ void MainWindow::saveToFile() {
         }
         file.close();
     }
+    updateStatistik();
 }
 
 void MainWindow::sortReminders() {
