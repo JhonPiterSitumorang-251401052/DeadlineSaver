@@ -440,7 +440,6 @@ MainWindow::MainWindow(QWidget *parent)
         QMessageBox QPushButton:hover {
             background-color: #2980b9;
         }
-
     )");
 }
 

@@ -15,15 +15,25 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="outerLayout">
-    <property name="leftMargin"><number>200</number></property>
-    <property name="rightMargin"><number>200</number></property>
-    <property name="topMargin"><number>40</number></property>
-    <property name="bottomMargin"><number>40</number></property>
-    <property name="spacing"><number>12</number></property>
+    <property name="spacing">
+     <number>12</number>
+    </property>
+    <property name="leftMargin">
+     <number>200</number>
+    </property>
+    <property name="topMargin">
+     <number>40</number>
+    </property>
+    <property name="rightMargin">
+     <number>200</number>
+    </property>
+    <property name="bottomMargin">
+     <number>40</number>
+    </property>
     <item>
      <widget class="QLabel" name="label">
       <property name="text">
-       <string>Reminder App</string>
+       <string>Deadline Saver</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignmentFlag::AlignHCenter</set>
@@ -56,23 +66,51 @@
     </item>
     <item>
      <widget class="QLabel" name="labelTag">
-      <property name="text">
-       <string>Kategori:</string>
-      </property>
       <property name="styleSheet">
        <string>font-weight: normal; font-size: 13px;</string>
+      </property>
+      <property name="text">
+       <string>Kategori:</string>
       </property>
      </widget>
     </item>
     <item>
      <widget class="QComboBox" name="comboTag">
-      <item><property name="text"><string>Kuliah</string></property></item>
-      <item><property name="text"><string>Kerja</string></property></item>
-      <item><property name="text"><string>Pribadi</string></property></item>
-      <item><property name="text"><string>Kesehatan</string></property></item>
-      <item><property name="text"><string>Belanja</string></property></item>
-      <item><property name="text"><string>Keuangan</string></property></item>
-      <item><property name="text"><string>Lain-lain</string></property></item>
+      <item>
+       <property name="text">
+        <string>Kuliah</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Kerja</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Pribadi</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Kesehatan</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Belanja</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Keuangan</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Lain-lain</string>
+       </property>
+      </item>
      </widget>
     </item>
     <item>
@@ -93,21 +131,21 @@
     </item>
     <item>
      <widget class="QPushButton" name="btnEdit">
-      <property name="text">
-       <string>Edit Reminder</string>
-      </property>
       <property name="enabled">
        <bool>false</bool>
+      </property>
+      <property name="text">
+       <string>Edit Reminder</string>
       </property>
      </widget>
     </item>
     <item>
      <widget class="QPushButton" name="btnSelesai">
-      <property name="text">
-       <string>Tandai Selesai ✔</string>
-      </property>
       <property name="enabled">
        <bool>false</bool>
+      </property>
+      <property name="text">
+       <string>Tandai Selesai ✔</string>
       </property>
      </widget>
     </item>
