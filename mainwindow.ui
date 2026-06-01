@@ -55,6 +55,27 @@
      <widget class="QDateTimeEdit" name="dateTimeEdit"/>
     </item>
     <item>
+     <widget class="QLabel" name="labelTag">
+      <property name="text">
+       <string>Kategori:</string>
+      </property>
+      <property name="styleSheet">
+       <string>font-weight: normal; font-size: 13px;</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QComboBox" name="comboTag">
+      <item><property name="text"><string>Kuliah</string></property></item>
+      <item><property name="text"><string>Kerja</string></property></item>
+      <item><property name="text"><string>Pribadi</string></property></item>
+      <item><property name="text"><string>Kesehatan</string></property></item>
+      <item><property name="text"><string>Belanja</string></property></item>
+      <item><property name="text"><string>Keuangan</string></property></item>
+      <item><property name="text"><string>Lain-lain</string></property></item>
+     </widget>
+    </item>
+    <item>
      <widget class="QPushButton" name="btnTambah">
       <property name="text">
        <string>Tambah Reminder</string>

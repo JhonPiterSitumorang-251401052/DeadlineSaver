@@ -14,6 +14,17 @@
 #include <QStyledItemDelegate>
 #include <QPainter>
 
+static QColor warnaDariTag(const QString &tag) {
+    if (tag == "Kuliah")    return QColor("#3498db");
+    if (tag == "Kerja")     return QColor("#e67e22");
+    if (tag == "Pribadi")   return QColor("#9b59b6");
+    if (tag == "Kesehatan") return QColor("#2ecc71");
+    if (tag == "Belanja")   return QColor("#e91e63");
+    if (tag == "Keuangan")  return QColor("#f1c40f");
+    return QColor("#95a5a6");
+}
+
+
 // Delegate untuk memberi padding pada setiap item di listReminder
 class PaddedItemDelegate : public QStyledItemDelegate {
 public:
@@ -85,10 +96,19 @@ MainWindow::MainWindow(QWidget *parent)
         QTextStream in(&file);
 
         while(!in.atEnd()) {
-
             QString line = in.readLine();
+            if (line.isEmpty()) continue;
 
-            ui->listReminder->addItem(line);
+            QStringList bagian = line.split("|");
+            QString pesan = bagian.size() > 0 ? bagian[0] : "";
+            QString waktu = bagian.size() > 1 ? bagian[1] : "";
+            QString tag   = bagian.size() > 2 ? bagian[2] : "Lain-lain";
+            QString teksTampil = pesan + " (" + waktu + ") [" + tag + "]";
+
+            QListWidgetItem *item = new QListWidgetItem(teksTampil);
+            item->setData(Qt::UserRole, line);
+            item->setForeground(warnaDariTag(tag));
+            ui->listReminder->addItem(item);
         }
 
         file.close();
@@ -108,15 +128,16 @@ MainWindow::MainWindow(QWidget *parent)
             ui->dateTimeEdit->dateTime()
                 .toString("yyyy-MM-dd hh:mm:ss");
 
-        QString dataMentah = reminder + "|" + waktu;
-        QString teksTampil = reminder + " (" + waktu + ")";
+        QString tag = ui->comboTag->currentText();
+        QString dataMentah = reminder + "|" + waktu + "|" + tag;
+        QString teksTampil = reminder + " (" + waktu + ") [" + tag + "]";
 
         if (editIndex >= 0) {
             // Mode edit: perbarui item yang sudah ada
             QListWidgetItem *item = ui->listReminder->item(editIndex);
             item->setText(teksTampil);
             item->setData(Qt::UserRole, dataMentah);
-            item->setForeground(Qt::white);
+            item->setForeground(warnaDariTag(tag));
 
             editIndex = -1;
             ui->btnTambah->setText("Tambah Reminder");
@@ -125,6 +146,7 @@ MainWindow::MainWindow(QWidget *parent)
             // Mode tambah: buat item baru
             QListWidgetItem *item = new QListWidgetItem(teksTampil);
             item->setData(Qt::UserRole, dataMentah);
+            item->setForeground(warnaDariTag(tag));
             ui->listReminder->addItem(item);
         }
 
@@ -152,6 +174,10 @@ MainWindow::MainWindow(QWidget *parent)
         ui->dateTimeEdit->setDateTime(
             QDateTime::fromString(bagian[1], "yyyy-MM-dd hh:mm:ss")
         );
+        if (bagian.size() >= 3) {
+            int idx = ui->comboTag->findText(bagian[2]);
+            if (idx >= 0) ui->comboTag->setCurrentIndex(idx);
+        }
 
         // Tandai item yang sedang diedit dengan warna oranye
         item->setForeground(QColor("#f39c12"));
@@ -314,7 +340,9 @@ MainWindow::MainWindow(QWidget *parent)
             // Jangan update countdown untuk item yang sedang diedit atau sudah selesai
             bool sudahSelesai = ui->listReminder->item(i)->data(Qt::UserRole + 1).toBool();
             if (i != editIndex && !sudahSelesai) {
-                ui->listReminder->item(i)->setText(pesan + " — " + countdown);
+                QString tag = bagian.size() >= 3 ? bagian[2] : "Lain-lain";
+                ui->listReminder->item(i)->setText(pesan + " [" + tag + "] — " + countdown);
+                ui->listReminder->item(i)->setForeground(warnaDariTag(tag));
             }
         }
     });
