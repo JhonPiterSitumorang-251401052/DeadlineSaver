@@ -168,6 +168,19 @@ MainWindow::MainWindow(QWidget *parent)
         int baris = ui->listReminder->currentRow();
         if (baris < 0) return;
 
+        QStringList bagianHapus = ui->listReminder->item(baris)
+            ->data(Qt::UserRole).toString().split("|");
+        QString namaReminder = bagianHapus.size() > 0 ? bagianHapus[0] : "reminder ini";
+
+        QMessageBox::StandardButton jawab = QMessageBox::question(
+            this,
+            "Hapus Reminder",
+            "Yakin ingin menghapus " + namaReminder + "?",
+            QMessageBox::Yes | QMessageBox::No
+        );
+
+        if (jawab == QMessageBox::No) return;
+
         // Batalkan mode edit jika item yang dihapus adalah yang sedang diedit
         if (baris == editIndex) {
             editIndex = -1;
