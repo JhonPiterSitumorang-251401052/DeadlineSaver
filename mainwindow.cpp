@@ -412,6 +412,13 @@ MainWindow::MainWindow(QWidget *parent)
             color: #999;
         }
 
+        #btnHapus {
+            background-color: #e74c3c;
+        }
+        #btnHapus:hover {
+            background-color: #c0392b;
+        }
+
         /* List Widget agar menyatu dengan background */
         QListWidget {
             background-color: rgba(0, 0, 0, 20%);
