@@ -418,6 +418,22 @@ MainWindow::MainWindow(QWidget *parent)
             border: none;
             color: #ecf0f1;
         }
+
+        QMessageBox QPushButton {
+            min-width: 30px;
+            min-height: 15px;
+            font-size: 15px;
+            padding: 6px 20px;
+            background-color: #3498db;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+        }
+
+        QMessageBox QPushButton:hover {
+            background-color: #2980b9;
+        }
+
     )");
 }
 
