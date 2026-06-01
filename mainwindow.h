@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QSystemTrayIcon>
+#include <QListWidgetItem>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -24,11 +25,15 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-
     QSystemTrayIcon *trayIcon;
-    int editIndex = -1; // -1 = mode tambah, >= 0 = mode edit
+    int editIndex = -1;
 
     void saveToFile();
     void updateStatistik();
+    void addReminderItem(const QString &dataMentah);
+    void hapusItem(int index);
+    void editItem(int index);
+    void toggleSelesai(int index);
+    void updateRowWidget(int index);
 };
 #endif // MAINWINDOW_H
