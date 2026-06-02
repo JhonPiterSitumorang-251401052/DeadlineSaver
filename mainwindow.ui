@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>700</height>
+    <height>820</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -91,6 +91,31 @@
        <string>Tambah Reminder</string>
       </property>
      </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="layoutSearch">
+      <property name="spacing">
+       <number>8</number>
+      </property>
+      <item>
+       <widget class="QLineEdit" name="inputSearch">
+        <property name="placeholderText">
+         <string>🔍  Cari reminder...</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="comboFilter">
+        <property name="fixedWidth">
+         <number>130</number>
+        </property>
+        <item><property name="text"><string>≡ Semua</string></property></item>
+        <item><property name="text"><string>📅 Hari Ini</string></property></item>
+        <item><property name="text"><string>🔜 Upcoming</string></property></item>
+        <item><property name="text"><string>✅ Selesai</string></property></item>
+       </widget>
+      </item>
+     </layout>
     </item>
     <item>
      <widget class="QListWidget" name="listReminder"/>

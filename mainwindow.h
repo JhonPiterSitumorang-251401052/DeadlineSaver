@@ -35,5 +35,6 @@ private:
     void editItem(int index);
     void toggleSelesai(int index);
     void updateRowWidget(int index);
+    void applyFilter();
 };
 #endif // MAINWINDOW_H

@@ -63,6 +63,7 @@ MainWindow::MainWindow(QWidget *parent)
         file.close();
         sortReminders();
         updateStatistik();
+        applyFilter();
     }
 
     // Timer tiap detik
@@ -178,7 +179,18 @@ MainWindow::MainWindow(QWidget *parent)
 
         sortReminders();
         saveToFile();
+        applyFilter();
         ui->InputReminder->clear();
+    });
+
+    // Search bar
+    connect(ui->inputSearch, &QLineEdit::textChanged, this, [=]() {
+        applyFilter();
+    });
+
+    // Dropdown filter
+    connect(ui->comboFilter, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [=]() {
+        applyFilter();
     });
 
     // Stylesheet
@@ -441,6 +453,37 @@ void MainWindow::toggleSelesai(int index) {
         }
     }
     updateStatistik();
+}
+
+void MainWindow::applyFilter() {
+    QString keyword = ui->inputSearch->text().trimmed().toLower();
+    int filterIdx = ui->comboFilter->currentIndex();
+    QDateTime sekarang = QDateTime::currentDateTime();
+    QDate hari_ini = sekarang.date();
+
+    for (int i = 0; i < ui->listReminder->count(); i++) {
+        QListWidgetItem *item = ui->listReminder->item(i);
+        QString dataMentah = item->data(Qt::UserRole).toString();
+        QStringList bagian = dataMentah.split("|");
+
+        QString nama = bagian.size() > 0 ? bagian[0].toLower() : "";
+        QDateTime waktu = bagian.size() > 1
+            ? QDateTime::fromString(bagian[1], "yyyy-MM-dd hh:mm:ss")
+            : QDateTime();
+        bool sudahSelesai = item->data(Qt::UserRole + 1).toBool();
+
+        bool cocokKeyword = keyword.isEmpty() || nama.contains(keyword);
+
+        bool cocokFilter = false;
+        switch (filterIdx) {
+            case 0: cocokFilter = true; break; // Semua
+            case 1: cocokFilter = !sudahSelesai && waktu.date() == hari_ini; break; // Hari Ini
+            case 2: cocokFilter = !sudahSelesai && waktu > sekarang; break; // Upcoming
+            case 3: cocokFilter = sudahSelesai; break; // Selesai
+        }
+
+        item->setHidden(!(cocokKeyword && cocokFilter));
+    }
 }
 
 void MainWindow::updateStatistik() {
