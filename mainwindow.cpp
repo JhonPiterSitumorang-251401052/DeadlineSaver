@@ -245,6 +245,27 @@ MainWindow::MainWindow(QWidget *parent)
         applyFilter();
     });
 
+    // Shortcut waktu
+    connect(ui->btn30Mnt, &QPushButton::clicked, this, [=]() {
+        ui->dateTimeEdit->setDateTime(QDateTime::currentDateTime().addSecs(30 * 60));
+    });
+    connect(ui->btn1Jam, &QPushButton::clicked, this, [=]() {
+        ui->dateTimeEdit->setDateTime(QDateTime::currentDateTime().addSecs(60 * 60));
+    });
+    connect(ui->btn3Jam, &QPushButton::clicked, this, [=]() {
+        ui->dateTimeEdit->setDateTime(QDateTime::currentDateTime().addSecs(3 * 60 * 60));
+    });
+    connect(ui->btnBesok, &QPushButton::clicked, this, [=]() {
+        QDateTime besok = QDateTime::currentDateTime().addDays(1);
+        besok.setTime(QTime(8, 0));
+        ui->dateTimeEdit->setDateTime(besok);
+    });
+    connect(ui->btnSeminggu, &QPushButton::clicked, this, [=]() {
+        QDateTime seminggu = QDateTime::currentDateTime().addDays(7);
+        seminggu.setTime(QTime(8, 0));
+        ui->dateTimeEdit->setDateTime(seminggu);
+    });
+
     // Tombol Pengaturan
     connect(ui->btnPengaturan, &QPushButton::clicked, this, [=]() {
         SettingsDialog *dialog = new SettingsDialog(this);
@@ -294,6 +315,22 @@ MainWindow::MainWindow(QWidget *parent)
 
         QPushButton:hover {
             background-color: #2980b9;
+        }
+
+        #btn30Mnt, #btn1Jam, #btn3Jam, #btnBesok, #btnSeminggu {
+            background-color: rgba(255,255,255,8%);
+            color: #bdc3c7;
+            font-size: 12px;
+            font-weight: normal;
+            border: 1px solid #555;
+            border-radius: 6px;
+            padding: 4px 6px;
+        }
+
+        #btn30Mnt:hover, #btn1Jam:hover, #btn3Jam:hover, #btnBesok:hover, #btnSeminggu:hover {
+            background-color: rgba(52,152,219,0.3);
+            color: white;
+            border-color: #3498db;
         }
 
         QListWidget {

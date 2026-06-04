@@ -65,6 +65,36 @@
      <widget class="QDateTimeEdit" name="dateTimeEdit"/>
     </item>
     <item>
+     <layout class="QHBoxLayout" name="layoutShortcut">
+      <property name="spacing"><number>6</number></property>
+      <item>
+       <widget class="QPushButton" name="btn30Mnt">
+        <property name="text"><string>⏱ 30 Mnt</string></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btn1Jam">
+        <property name="text"><string>🕐 1 Jam</string></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btn3Jam">
+        <property name="text"><string>🕒 3 Jam</string></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnBesok">
+        <property name="text"><string>📅 Besok</string></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnSeminggu">
+        <property name="text"><string>📆 Seminggu</string></property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
      <widget class="QLabel" name="labelTag">
       <property name="styleSheet">
        <string>font-weight: normal; font-size: 13px;</string>
