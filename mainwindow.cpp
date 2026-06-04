@@ -120,9 +120,17 @@ MainWindow::MainWindow(QWidget *parent)
                     ui->InputReminder->clear();
                 }
 
-                toggleSelesai(i);
-
-                saveToFile();
+                QWidget *w = ui->listReminder->itemWidget(item);
+                if (w) {
+                    QLabel *lblCountdown = w->findChild<QLabel*>("lblCountdown");
+                    if (lblCountdown) {
+                        lblCountdown->setText(pesan + " [" + tag + "]  —  Sudah lewat!");
+                        lblCountdown->setStyleSheet(
+                            "color: #e74c3c; background: transparent; font-size: 13px;"
+                            );
+                    }
+                }
+                updateStatistik();
                 continue;
             }
 
