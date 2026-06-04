@@ -366,6 +366,20 @@ void MainWindow::addReminderItem(const QString &dataMentah) {
     item->setSizeHint(QSize(0, 46));
     ui->listReminder->setItemWidget(item, row);
 
+    if (bagian.size() >= 4 && bagian[3] == "1") {
+        item->setData(Qt::UserRole + 1, true);
+        btnBulat->setText("✓");
+        btnBulat->setStyleSheet(
+            "QPushButton { background: transparent; color: #2ecc71; font-size: 16px; border: none; }"
+            );
+        QFont f = lblCountdown->font();
+        f.setStrikeOut(true);
+        lblCountdown->setFont(f);
+        lblCountdown->setStyleSheet(
+            "color: #2ecc71; background: transparent; font-size: 13px;"
+            );
+    }
+
     // Connect tombol selesai
     connect(btnBulat, &QPushButton::clicked, this, [=]() {
         int idx = ui->listReminder->row(item);
