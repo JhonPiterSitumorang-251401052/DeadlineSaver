@@ -59,7 +59,30 @@ MainWindow::MainWindow(QWidget *parent)
         while (!in.atEnd()) {
             QString line = in.readLine();
             if (line.isEmpty()) continue;
+
+            // Panggil fungsi add item biasa
             addReminderItem(line);
+
+            // Kunci pembeda: Jika data baris tersebut punya flag selesai ("1"), otomatis coret!
+            QStringList bagian = line.split("|");
+            if (bagian.size() == 4 && bagian[3] == "1") {
+                int rowTarget = ui->listReminder->count() - 1;
+                // Panggil toggle tanpa membalikkan logika
+                QListWidgetItem *lastItem = ui->listReminder->item(rowTarget);
+                lastItem->setData(Qt::UserRole + 1, true);
+
+                // Jalankan update tampilan row widgetnya agar dicoret
+                QWidget *w = ui->listReminder->itemWidget(lastItem);
+                if (w) {
+                    QPushButton *btnBulat = w->findChild<QPushButton*>("btnBulat");
+                    QLabel *lbl = w->findChild<QLabel*>("lblCountdown");
+                    if (btnBulat) btnBulat->setText("✓");
+                    if (lbl) {
+                        QFont f = lbl->font(); f.setStrikeOut(true); lbl->setFont(f);
+                        lbl->setStyleSheet("color: #2ecc71; background: transparent; font-size: 13px;");
+                    }
+                }
+            }
         }
         file.close();
         sortReminders();
@@ -90,14 +113,16 @@ MainWindow::MainWindow(QWidget *parent)
             if (sekarangStr == waktu) {
                 sound->play();
                 trayIcon->showMessage("Reminder", pesan, QSystemTrayIcon::Information, 5000);
+
                 if (i == editIndex) {
                     editIndex = -1;
                     ui->btnTambah->setText("Tambah Reminder");
                     ui->InputReminder->clear();
                 }
-                delete ui->listReminder->takeItem(i);
+
+                toggleSelesai(i);
+
                 saveToFile();
-                i--;
                 continue;
             }
 
@@ -410,18 +435,29 @@ void MainWindow::toggleSelesai(int index) {
     bool baru = !sudahSelesai;
     item->setData(Qt::UserRole + 1, baru);
 
+    // AMANIN DATA: Ambil data mentah, lalu update statusnya di string agar tersimpan permanen
+    QString dataMentah = item->data(Qt::UserRole).toString();
+    QStringList bagian = dataMentah.split("|");
+
+    // Pastikan struktur data mentah punya flag status di bagian akhir (indeks ke-3)
+    if (bagian.size() >= 3) {
+        if (bagian.size() == 3) {
+            bagian.append(baru ? "1" : "0");
+        } else {
+            bagian[3] = baru ? "1" : "0";
+        }
+        item->setData(Qt::UserRole, bagian.join("|"));
+    }
+
     QWidget *w = ui->listReminder->itemWidget(item);
     if (w) {
         QPushButton *btnBulat = w->findChild<QPushButton*>("btnBulat");
         QLabel *lbl = w->findChild<QLabel*>("lblCountdown");
 
         if (baru) {
-            // Tandai selesai
             if (btnBulat) {
                 btnBulat->setText("✓");
-                btnBulat->setStyleSheet(
-                    "QPushButton { background: transparent; color: #2ecc71; font-size: 16px; border: none; }"
-                );
+                btnBulat->setStyleSheet("QPushButton { background: transparent; color: #2ecc71; font-size: 16px; border: none; }");
             }
             if (lbl) {
                 QFont f = lbl->font();
@@ -430,26 +466,16 @@ void MainWindow::toggleSelesai(int index) {
                 lbl->setStyleSheet("color: #2ecc71; background: transparent; font-size: 13px;");
             }
         } else {
-            // Batalkan selesai
-            QString dataMentah = item->data(Qt::UserRole).toString();
-            QStringList bagian = dataMentah.split("|");
             QString tag = bagian.size() >= 3 ? bagian[2] : "Lain-lain";
-
             if (btnBulat) {
                 btnBulat->setText("○");
-                btnBulat->setStyleSheet(
-                    "QPushButton { background: transparent; color: #bdc3c7; font-size: 16px; border: none; }"
-                    "QPushButton:hover { color: #2ecc71; }"
-                );
+                btnBulat->setStyleSheet("QPushButton { background: transparent; color: #bdc3c7; font-size: 16px; border: none; } QPushButton:hover { color: #2ecc71; }");
             }
             if (lbl) {
                 QFont f = lbl->font();
                 f.setStrikeOut(false);
                 lbl->setFont(f);
-                lbl->setStyleSheet(
-                    QString("color: %1; background: transparent; font-size: 13px;")
-                        .arg(warnaDariTag(tag).name())
-                );
+                lbl->setStyleSheet(QString("color: %1; background: transparent; font-size: 13px;").arg(warnaDariTag(tag).name()));
             }
         }
     }
