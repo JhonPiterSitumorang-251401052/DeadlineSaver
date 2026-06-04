@@ -31,7 +31,59 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    // ===== PRESET WAKTU CEPAT =====
+    QWidget *presetWidget = new QWidget();
+    presetWidget->setStyleSheet("background: transparent;");
+    QHBoxLayout *presetLayout = new QHBoxLayout(presetWidget);
+    presetLayout->setContentsMargins(0, 0, 0, 0);
+    presetLayout->setSpacing(6);
+
+    struct Preset { QString label; QString emoji; int menit; };
+    QList<Preset> presets = {
+        {"30 Mnt",  "⏱",  30   },
+        {"1 Jam",   "⏰",  60   },
+        {"3 Jam",   "🕒",  180  },
+        {"Besok",   "📅",  1440 },
+        {"Seminggu","📆",  10080}
+    };
+
+    QString presetStyle =
+        "QPushButton {"
+        "  background: rgba(52,152,219,0.12);"
+        "  color: #3498db;"
+        "  border: 1px solid rgba(52,152,219,0.35);"
+        "  border-radius: 6px;"
+        "  font-size: 11px;"
+        "  padding: 4px 6px;"
+        "  font-weight: normal;"
+        "}"
+        "QPushButton:hover {"
+        "  background: rgba(52,152,219,0.28);"
+        "  border-color: #3498db;"
+        "}";
+
+    for (const auto &p : presets) {
+        QPushButton *btn = new QPushButton(p.emoji + " " + p.label);
+        btn->setStyleSheet(presetStyle);
+        btn->setCursor(Qt::PointingHandCursor);
+        btn->setToolTip("Set ke " + p.label + " dari sekarang");
+        int menit = p.menit;
+        connect(btn, &QPushButton::clicked, this, [=]() {
+            QDateTime target = QDateTime::currentDateTime().addSecs(menit * 60LL);
+            ui->dateTimeEdit->setDateTime(target);
+        });
+        presetLayout->addWidget(btn);
+    }
+
     ui->dateTimeEdit->setCalendarPopup(true);
+
+    QWidget *containerWidget = ui->dateTimeEdit->parentWidget();
+    QVBoxLayout *mainVLayout = qobject_cast<QVBoxLayout*>(containerWidget->layout());
+    if (mainVLayout) {
+        int idx = mainVLayout->indexOf(ui->dateTimeEdit);
+        mainVLayout->insertWidget(idx + 1, presetWidget);
+    }
 
     // Setup label style
     QString styleLabel = "color: #bdc3c7; font-size: 13px; font-weight: normal;";
