@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->dateTimeEdit->setCalendarPopup(true);
 
     // Setup label style
     QString styleLabel = "color: #bdc3c7; font-size: 13px; font-weight: normal;";
