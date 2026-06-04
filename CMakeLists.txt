@@ -71,3 +71,5 @@ install(TARGETS ReminderApp
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(ReminderApp)
 endif()
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/alarm.wav ${CMAKE_CURRENT_BINARY_DIR}/alarm.wav COPYONLY)
