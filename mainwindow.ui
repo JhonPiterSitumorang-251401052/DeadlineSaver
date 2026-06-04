@@ -76,19 +76,47 @@
     </item>
     <item>
      <widget class="QComboBox" name="comboTag">
-      <item><property name="text"><string>Kuliah</string></property></item>
-      <item><property name="text"><string>Kerja</string></property></item>
-      <item><property name="text"><string>Pribadi</string></property></item>
-      <item><property name="text"><string>Kesehatan</string></property></item>
-      <item><property name="text"><string>Belanja</string></property></item>
-      <item><property name="text"><string>Keuangan</string></property></item>
-      <item><property name="text"><string>Lain-lain</string></property></item>
+      <item>
+       <property name="text">
+        <string>Kuliah</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Kerja</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Pribadi</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Kesehatan</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Belanja</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Keuangan</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Lain-lain</string>
+       </property>
+      </item>
      </widget>
     </item>
     <item>
      <widget class="QPushButton" name="btnTambah">
       <property name="text">
-       <string>Tambah Reminder</string>
+       <string>+ Tambah Reminder</string>
       </property>
      </widget>
     </item>
@@ -106,13 +134,29 @@
       </item>
       <item>
        <widget class="QComboBox" name="comboFilter">
-        <property name="fixedWidth">
+        <property name="fixedWidth" stdset="0">
          <number>130</number>
         </property>
-        <item><property name="text"><string>≡ Semua</string></property></item>
-        <item><property name="text"><string>📅 Hari Ini</string></property></item>
-        <item><property name="text"><string>🔜 Upcoming</string></property></item>
-        <item><property name="text"><string>✅ Selesai</string></property></item>
+        <item>
+         <property name="text">
+          <string>≡ Semua</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>📅 Hari Ini</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>🔜 Upcoming</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>✅ Selesai</string>
+         </property>
+        </item>
        </widget>
       </item>
      </layout>
@@ -122,14 +166,14 @@
     </item>
     <item>
      <widget class="QLabel" name="labelStatistik">
+      <property name="styleSheet">
+       <string>font-size: 12px; color: #95a5a6; padding: 6px; background: rgba(255,255,255,0.05); border-radius: 6px;</string>
+      </property>
       <property name="text">
        <string>📊 Aktif: 0  ✅ Selesai: 0  ⚠ Terlewat: 0</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignmentFlag::AlignHCenter</set>
-      </property>
-      <property name="styleSheet">
-       <string>font-size: 12px; color: #95a5a6; padding: 6px; background: rgba(255,255,255,0.05); border-radius: 6px;</string>
       </property>
      </widget>
     </item>
