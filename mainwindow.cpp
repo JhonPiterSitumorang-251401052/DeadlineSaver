@@ -1,5 +1,8 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include "settingsdialog.h"
+#include <QSettings>
+#include <QFileInfo>
 #include <QTimer>
 #include <QMessageBox>
 #include <QDateTime>
@@ -109,9 +112,24 @@ MainWindow::MainWindow(QWidget *parent)
             QString tag   = bagian.size() >= 3 ? bagian[2] : "Lain-lain";
             bool sudahSelesai = item->data(Qt::UserRole + 1).toBool();
 
+            // Cek pengingat awal
+            QSettings sett("DeadlineSaver", "Settings");
+            int menitAwal = sett.value("menitSebelum", 15).toInt();
+            bool senyap   = sett.value("modeSenyap", false).toBool();
+            QString soundPath = sett.value("soundFile", "alarm.wav").toString();
+
+            QDateTime targetWaktuAwal = QDateTime::fromString(waktu, "yyyy-MM-dd hh:mm:ss").addSecs(-menitAwal * 60);
+            if (sekarangStr == targetWaktuAwal.toString("yyyy-MM-dd hh:mm:ss")) {
+                if (!senyap) sound->play();
+                trayIcon->showMessage("Pengingat", pesan + " — " + QString::number(menitAwal) + " menit lagi!", QSystemTrayIcon::Information, 5000);
+            }
+
             // Cek alarm
             if (sekarangStr == waktu) {
-                sound->play();
+                if (!senyap) {
+                    sound->setSource(QUrl::fromLocalFile(soundPath));
+                    sound->play();
+                }
                 trayIcon->showMessage("Reminder", pesan, QSystemTrayIcon::Information, 5000);
 
                 if (i == editIndex) {
@@ -120,7 +138,7 @@ MainWindow::MainWindow(QWidget *parent)
                     ui->InputReminder->clear();
                 }
 
-            QWidget *w = ui->listReminder->itemWidget(item);
+                QWidget *w = ui->listReminder->itemWidget(item);
                 if (w) {
                     QLabel *lblCountdown = w->findChild<QLabel*>("lblCountdown");
                     if (lblCountdown) {
@@ -175,7 +193,7 @@ MainWindow::MainWindow(QWidget *parent)
                         lblCountdown->setText(pesan + " [" + tag + "]  —  " + countdown);
                         lblCountdown->setStyleSheet(
                             QString("color: %1; background: transparent; font-size: 13px;").arg(warnaStr)
-                        );
+                            );
                     }
                 }
             }
@@ -225,6 +243,13 @@ MainWindow::MainWindow(QWidget *parent)
     // Dropdown filter
     connect(ui->comboFilter, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [=]() {
         applyFilter();
+    });
+
+    // Tombol Pengaturan
+    connect(ui->btnPengaturan, &QPushButton::clicked, this, [=]() {
+        SettingsDialog *dialog = new SettingsDialog(this);
+        dialog->exec();
+        delete dialog;
     });
 
     // Stylesheet
@@ -325,7 +350,7 @@ void MainWindow::addReminderItem(const QString &dataMentah) {
     btnBulat->setStyleSheet(
         "QPushButton { background: transparent; color: #bdc3c7; font-size: 16px; border: none; }"
         "QPushButton:hover { color: #2ecc71; }"
-    );
+        );
     btnBulat->setCursor(Qt::PointingHandCursor);
 
     // Label teks + countdown
@@ -334,7 +359,7 @@ void MainWindow::addReminderItem(const QString &dataMentah) {
     lblCountdown->setStyleSheet(
         QString("color: %1; background: transparent; font-size: 13px; font-weight: normal;")
             .arg(warnaDariTag(tag).name())
-    );
+        );
     lblCountdown->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
     // Tombol edit
@@ -344,7 +369,7 @@ void MainWindow::addReminderItem(const QString &dataMentah) {
     btnEditRow->setStyleSheet(
         "QPushButton { background: transparent; color: #3498db; font-size: 14px; border: none; border-radius: 4px; }"
         "QPushButton:hover { background: rgba(52,152,219,0.2); }"
-    );
+        );
     btnEditRow->setCursor(Qt::PointingHandCursor);
 
     // Tombol hapus
@@ -354,7 +379,7 @@ void MainWindow::addReminderItem(const QString &dataMentah) {
     btnHapusRow->setStyleSheet(
         "QPushButton { background: transparent; color: #e74c3c; font-size: 14px; border: none; border-radius: 4px; }"
         "QPushButton:hover { background: rgba(231,76,60,0.2); }"
-    );
+        );
     btnHapusRow->setCursor(Qt::PointingHandCursor);
 
     layout->addWidget(btnBulat);
@@ -389,7 +414,7 @@ void MainWindow::addReminderItem(const QString &dataMentah) {
             this, "Hapus Reminder",
             "Yakin ingin menghapus \"" + nama + "\"?",
             QMessageBox::Yes | QMessageBox::No
-        );
+            );
         if (jawab == QMessageBox::Yes)
             hapusItem(idx);
     });
@@ -503,18 +528,18 @@ void MainWindow::applyFilter() {
 
         QString nama = bagian.size() > 0 ? bagian[0].toLower() : "";
         QDateTime waktu = bagian.size() > 1
-            ? QDateTime::fromString(bagian[1], "yyyy-MM-dd hh:mm:ss")
-            : QDateTime();
+                              ? QDateTime::fromString(bagian[1], "yyyy-MM-dd hh:mm:ss")
+                              : QDateTime();
         bool sudahSelesai = item->data(Qt::UserRole + 1).toBool();
 
         bool cocokKeyword = keyword.isEmpty() || nama.contains(keyword);
 
         bool cocokFilter = false;
         switch (filterIdx) {
-            case 0: cocokFilter = true; break; // Semua
-            case 1: cocokFilter = !sudahSelesai && waktu.date() == hari_ini; break; // Hari Ini
-            case 2: cocokFilter = !sudahSelesai && waktu > sekarang; break; // Upcoming
-            case 3: cocokFilter = sudahSelesai; break; // Selesai
+        case 0: cocokFilter = true; break; // Semua
+        case 1: cocokFilter = !sudahSelesai && waktu.date() == hari_ini; break; // Hari Ini
+        case 2: cocokFilter = !sudahSelesai && waktu > sekarang; break; // Upcoming
+        case 3: cocokFilter = sudahSelesai; break; // Selesai
         }
 
         item->setHidden(!(cocokKeyword && cocokFilter));
@@ -546,7 +571,7 @@ void MainWindow::updateStatistik() {
         "📊 Aktif: " + QString::number(aktif) +
         "   ✅ Selesai: " + QString::number(selesai) +
         "   ⚠ Terlewat: " + QString::number(terlewat)
-    );
+        );
 }
 
 void MainWindow::saveToFile() {

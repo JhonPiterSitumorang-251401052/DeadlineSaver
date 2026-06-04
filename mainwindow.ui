@@ -86,11 +86,28 @@
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="btnTambah">
-      <property name="text">
-       <string>Tambah Reminder</string>
-      </property>
-     </widget>
+     <layout class="QHBoxLayout" name="layoutTambah">
+      <item>
+       <widget class="QPushButton" name="btnTambah">
+        <property name="text">
+         <string>Tambah Reminder</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnPengaturan">
+        <property name="text">
+         <string>⚙</string>
+        </property>
+        <property name="maximumWidth">
+         <number>40</number>
+        </property>
+        <property name="toolTip">
+         <string>Pengaturan</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
     <item>
      <layout class="QHBoxLayout" name="layoutSearch">

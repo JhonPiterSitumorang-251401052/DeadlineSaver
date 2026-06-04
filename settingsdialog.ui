@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SettingsDialog</class>
+ <widget class="QDialog" name="SettingsDialog">
+  <property name="geometry">
+   <rect><x>0</x><y>0</y><width>400</width><height>320</height></rect>
+  </property>
+  <property name="windowTitle">
+   <string>Pengaturan</string>
+  </property>
+  <layout class="QVBoxLayout" name="mainLayout">
+   <property name="leftMargin"><number>24</number></property>
+   <property name="rightMargin"><number>24</number></property>
+   <property name="topMargin"><number>24</number></property>
+   <property name="bottomMargin"><number>24</number></property>
+   <property name="spacing"><number>16</number></property>
+
+   <item>
+    <widget class="QLabel" name="labelJudul">
+     <property name="text"><string>⚙  Pengaturan</string></property>
+    </widget>
+   </item>
+
+   <!-- Pengingat awal -->
+   <item>
+    <layout class="QHBoxLayout">
+     <item>
+      <widget class="QLabel" name="labelMenit">
+       <property name="text"><string>⏰  Ingatkan saya:</string></property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboMenit">
+       <item><property name="text"><string>5 menit</string></property></item>
+       <item><property name="text"><string>10 menit</string></property></item>
+       <item><property name="text"><string>15 menit</string></property></item>
+       <item><property name="text"><string>30 menit</string></property></item>
+       <item><property name="text"><string>60 menit</string></property></item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="labelSebelum">
+       <property name="text"><string>sebelum deadline</string></property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+
+   <!-- Suara alarm -->
+   <item>
+    <layout class="QHBoxLayout">
+     <item>
+      <widget class="QLabel" name="labelSoundTitle">
+       <property name="text"><string>🔊  Suara alarm:</string></property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboSound">
+       <item><property name="text"><string>Default</string></property></item>
+       <item><property name="text"><string>Bip</string></property></item>
+       <item><property name="text"><string>Buzzer</string></property></item>
+       <item><property name="text"><string>Scanner</string></property></item>
+      </widget>
+     </item>
+    </layout>
+   </item>
+
+   <!-- Mode senyap -->
+   <item>
+    <layout class="QHBoxLayout">
+     <item>
+      <widget class="QLabel" name="labelSenyap">
+       <property name="text"><string>🔕  Mode senyap:</string></property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="toggleSenyap">
+       <property name="text"><string>Matikan semua suara</string></property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+
+   <!-- Spacer -->
+   <item>
+    <spacer>
+     <property name="orientation"><enum>Qt::Vertical</enum></property>
+    </spacer>
+   </item>
+
+   <!-- Tombol -->
+   <item>
+    <layout class="QHBoxLayout">
+     <item>
+      <spacer><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnBatal">
+       <property name="text"><string>Batal</string></property>
+       <property name="maximumWidth"><number>80</number></property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnSimpan">
+       <property name="text"><string>Simpan</string></property>
+       <property name="maximumWidth"><number>80</number></property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
