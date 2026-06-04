@@ -120,7 +120,7 @@ MainWindow::MainWindow(QWidget *parent)
                     ui->InputReminder->clear();
                 }
 
-                QWidget *w = ui->listReminder->itemWidget(item);
+            QWidget *w = ui->listReminder->itemWidget(item);
                 if (w) {
                     QLabel *lblCountdown = w->findChild<QLabel*>("lblCountdown");
                     if (lblCountdown) {
