@@ -34,6 +34,17 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    setWindowIcon(QIcon(":/logo.png"));
+
+    QLabel *logoLabel = new QLabel();
+    QPixmap logoPixmap(":/logo.png");
+    logoLabel->setPixmap(logoPixmap.scaled(70, 70, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    logoLabel->setAlignment(Qt::AlignCenter);
+    logoLabel->setStyleSheet("background: transparent; padding-top: 8px;");
+    QVBoxLayout *vlay = qobject_cast<QVBoxLayout*>(ui->centralwidget->layout());
+    if (vlay) vlay->insertWidget(0, logoLabel);
+
     ui->dateTimeEdit->setCalendarPopup(true);
 
     // Setup label style
